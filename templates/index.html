@@ -3,7 +3,27 @@
 <title>Birthday Wishing App</title>
 {% endblock%} 
 {%block body%}
-<div>
-    <h1>Hello </h1>
+<div class="form">
+    <form action="/" method="POST" id="form1">
+    <label for="Name">Name:</label>
+    <input type="text" id="name" name="name"><br/><br/>
+
+
+    <label for="phone">Phone number:</label>
+    <input type="tel" id="phone" name="phone" placeholder="xxxxnnnnnn"  required><br/><br/>
+
+
+    <label for="E-mail">E-mail:</label>
+    <input type="email" id="email" name="email" placeholder="abcd@xyz.com" required><br/><br/>
+
+
+    <label for="dob">DOB:</label>
+    <input type="date" id="dob" name="dob"><br/><br/>
+
+    <label for="custom-message"> Custom Message </label>
+    <input type="text" name="message" id="message" maxlength="50"><br/><br/>
+    <input class="button" type="submit"/>
+
+</form>
 </div>
 {%endblock%}

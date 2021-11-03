@@ -1,0 +1,48 @@
+<html>
+<head>
+<title>	BIRTHDAY EMAIL GENERATOR </title>
+</head>
+
+<h1><center>Birthday Wishing</center></h1>
+
+</br>
+<form action="/action_page.php" method="get" id="form1">
+    <label for="Name">Name:</label>
+    <input type="text" id="name" name="name"><br><br>
+
+
+    <label for="phone">Phone number:</label>
+    <input type="tel" id="phone" name="phone" placeholder="+91-xxxx-nnnnnn" pattern="[0-9]{4}-[0-9]{6}" required><br><br>
+
+
+    <label for="E-mail">E-mail:</label>
+    <input type="email" id="email" name="email" placeholder="abcd@xyz.com"><br><br>
+
+
+    <label for="dob">DOB:</label>
+    <input type="date" id="dob" name="dob">
+</form>
+</br>
+
+
+
+
+
+Custom Message? <br>
+Yes<input type="radio" name="radio1" value="Yes" onClick="getResults(this)">
+No<input type="radio" name="radio1" value="No" onclick="getResults(this)">
+
+<div class="text"><p>Custom Message  <input type="text" name="text1" id="text1" maxlength="50"></p></div>
+
+<script> 
+    (document).ready(function() {
+        (".text").hide()
+
+    });
+    function getResults(elem) {
+        elem.checked && elem.value == "Yes" ? (".text").show() : (".text").hide();
+    };
+</script>
+    <button type="submit" form="form1" value="Submit">Submit</button>
+</body>
+</html>

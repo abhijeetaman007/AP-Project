@@ -1,18 +1,20 @@
 from flask import Flask,render_template,url_for,request,redirect,jsonify
 from flask.ctx import AppContext
 from flask_sqlalchemy import SQLAlchemy
-import models
+# import models
 import requests
 from flask_mail import Mail, Message
 from apscheduler.schedulers.background import BackgroundScheduler
 import time
+import datetime
 
 app = Flask(__name__)
 
-#DB Config
+# #DB Config
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user.db'
-db = SQLAlchemy(app) 
-
+db = SQLAlchemy(app)
+import models
+db.create_all()
 
 mail = Mail(app)
 
@@ -21,7 +23,7 @@ app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = 'birthdaywishingbot@gmail.com'
 app.config['MAIL_PASSWORD'] = 'approject2021'
-app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_TLS'] = False  
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
     
@@ -30,37 +32,50 @@ mail = Mail(app)
 # Home page route
 @app.route('/')
 def index():
-    # return "Hello"
+    # Fetch all users
+
+
     return render_template("index.html")
 
 
 # Testing DB connection route
-@app.route('/test',methods=['POST','GET']) 
+@app.route('/',methods=['POST','GET']) 
 def test():
     if request.method == 'POST':    
-        user = request.json  
-        print("User obj ",user)
+        print(request.form)
+        userName = request.form['name']
+        userPhone = request.form['phone']
+        userEmail = request.form['email']
+        userDob = request.form['dob']
+        userMessage = request.form['message']
+        
+        format = '%Y-%m-%d'
+        date = datetime.datetime.strptime(userDob,format)
+        print("date : ",date)
 
-        newUser = models.User(id=4,name=user['name'],email=user['email'])
-        print(newUser)
+        print(userName,userPhone,userEmail,date,userMessage,sep=" ")
+
+        # user = request.json  
+
+        newUser = models.User(name=userName,email=userEmail,phone=userPhone,dob=date,message=userMessage)
+        # print(newUser)
         try:
             print(db)
             print(newUser)
             db.session.add(newUser)    #Storing
             db.session.commit()
             print("User added to DB")
-            return jsonify({"Response":"Success"})
+            return render_template('thankyoupage.html',success=True)
+
+
+            # return jsonify({"Response":"Success"})
             # return redirect('/')   
         except Exception as e:
             print(repr(e))
-            return 'There was an issue adding your task'
+            return render_template("thankyoupage.html",success=False)
         
     else:
         return jsonify({"Response":"Get Request Called"})
-
-    # return render_template('index.html',tasks=tasks)
-
-
 
 
 #SMS sending route
@@ -118,7 +133,12 @@ def sendEmail():
 if __name__ == "__main__":
     print("running")
     scheduler = BackgroundScheduler()
-    job = scheduler.add_job( sendSMS, 'cron', day_of_week ='mon-sun', hour=18, minute=30,second=10)
+    job = scheduler.add_job( sendEmail, 'cron', day_of_week ='mon-sun', hour=18, minute=30,second=10)
     scheduler.start()
-    app.run(use_reloader=False)
+    #DB Config
+    # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user.db'
+    # db = SQLAlchemy(app) 
+
+    app.run(debug=True)
+    # app.run(use_reloader=False)
     

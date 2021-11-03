@@ -1,0 +1,17 @@
+{% extends "base.html" %} 
+{% block head%}
+<title>Birthday Wishing App</title>
+{% endblock%} 
+{%block body%}
+<div>
+    {%if success == True%}
+    <h2>User detail added!</h2>
+    <a href="/">Add more user</a>
+    {%endif%}
+    
+    {%if success == False%}
+        <h2>Something went wrong ;( </h2>
+        <a href="/">Try Adding again.</a>
+    {%endif%}
+</div>
+{%endblock%}
