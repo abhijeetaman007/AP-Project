@@ -1,13 +1,13 @@
 from flask import Flask,render_template,url_for,request,redirect,jsonify
 from flask.ctx import AppContext
 from flask_sqlalchemy import SQLAlchemy
-# import models
 import requests
 from flask_mail import Mail, Message
 from apscheduler.schedulers.background import BackgroundScheduler
 import time
 import datetime
 
+#Initialising Flask 
 app = Flask(__name__)
 
 # #DB Config
@@ -32,10 +32,9 @@ mail = Mail(app)
 # Home page route
 @app.route('/')
 def index():
-    # Fetch all users
-
-
-    return render_template("index.html")
+    # Fetch all users 
+    users = models.User.query.all()
+    return render_template("index.html",users=users)
 
 
 # Testing DB connection route
@@ -52,13 +51,9 @@ def test():
         format = '%Y-%m-%d'
         date = datetime.datetime.strptime(userDob,format)
         print("date : ",date)
-
         print(userName,userPhone,userEmail,date,userMessage,sep=" ")
-
-        # user = request.json  
-
         newUser = models.User(name=userName,email=userEmail,phone=userPhone,dob=date,message=userMessage)
-        # print(newUser)
+        print("new User : ",newUser)
         try:
             print(db)
             print(newUser)
@@ -66,10 +61,6 @@ def test():
             db.session.commit()
             print("User added to DB")
             return render_template('thankyoupage.html',success=True)
-
-
-            # return jsonify({"Response":"Success"})
-            # return redirect('/')   
         except Exception as e:
             print(repr(e))
             return render_template("thankyoupage.html",success=False)
@@ -78,17 +69,35 @@ def test():
         return jsonify({"Response":"Get Request Called"})
 
 
+
+#Automated Bday wisher function
+@app.route('/sendbdaywish',methods=['GET'])
+def sendBdayWish():
+    
+    # Fetch all users details
+    users = models.User.query.all()
+    print(users)
+    for user in users:
+        print("Birthday ",user.dob)
+        print("Today's Date",datetime.date.today())
+        if(datetime.date.today().day == user.dob.day and datetime.date.today().month == user.dob.month):
+            print("here")
+            sendEmail(user)
+            # sendSMS(user)
+    return "success"
+
+
+
 #SMS sending route
-@app.route('/sendsms',methods=['POST','GET'])
-def sendSMS():
+# @app.route('/sendsms',methods=['POST','GET'])
+def sendSMS(user):
     with app.app_context():
         try:
             print("Sending SMS")
             url = "https://www.fast2sms.com/dev/bulkV2"
-            number = "7091788126"
-            message = "Happy Birthday \n - Abhijeet Sinha"
+            number = user.Number
+            message = user.message+ "\n -"+user.name
             querystring = {"authorization":"YyvBSlen5O2ALDk4IQUVzsXHCqMRK7i9aNJwp0x3ud1G6fjTbchiQXjoG2RWI8mTJKODE4cA7baFtx9M","message":message,"language":"english","route":"q","numbers":number}
-
             headers = {
                 'cache-control': "no-cache"
             }
@@ -106,17 +115,17 @@ def sendSMS():
 
 
 #Email sending route
-@app.route('/sendemail',methods=['POST','GET'])
-def sendEmail():
+# @app.route('/sendemail',methods=['POST','GET'])
+def sendEmail(user):
     with app.app_context():
         try:
             print("Sending Email")    
             msg = Message(
-                            'Hello testing mailer',
+                            'Birthday Wish :)',
                             sender ='birthdaywishingbot@gmail.com',
-                            recipients = ['abhijeetsinha1503@gmail.com']
+                            recipients = [user.email]
                         )
-            msg.body = 'Final Testing mail'
+            msg.body = user.message+"\n \n -"+user.name
             mail.send(msg)
             print("Email sent")
             return jsonify({"response":"Mail sent"})
@@ -124,21 +133,12 @@ def sendEmail():
                 print(repr(e))
                 return jsonify({"response":"Something went wrong"})
 
-# # @app.before_first_request
-# def testScheduling():
-#     print("Hello from scheduler")
-#     print(time.time())
-#     time.sleep(100000)
 
 if __name__ == "__main__":
     print("running")
     scheduler = BackgroundScheduler()
-    job = scheduler.add_job( sendEmail, 'cron', day_of_week ='mon-sun', hour=18, minute=30,second=10)
+    job = scheduler.add_job( sendBdayWish, 'cron', day_of_week ='mon-sun', hour=23, minute=20,second=15)
     scheduler.start()
-    #DB Config
-    # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user.db'
-    # db = SQLAlchemy(app) 
-
     app.run(debug=True)
     # app.run(use_reloader=False)
     

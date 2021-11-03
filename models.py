@@ -1,8 +1,9 @@
 from app import db
-import datetime
+import time
+import uuid
 class User(db.Model):
     __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key = True)
+    id = db.Column(db.String(500), primary_key = True)
     name = db.Column(db.String(255))
     phone = db.Column(db.String(20))
     dob = db.Column(db.Date)
@@ -10,11 +11,7 @@ class User(db.Model):
     message = db.Column(db.String(1000),default="Happy birthday! I hope all your birthday wishes and dreams come true")
 
     def __init__(self, name, email,phone,dob,message="Happy Birthday!!! I hope all your birthday wishes and dreams come true"):
-        # self.id = id
-        # format = '%Y-%B-%d'
-        # date = datetime.strptime(dob,format)
-        # datetime.strftime(datetime.strptime('15-MARCH-2015','%d-%B-%Y'),'%Y-%m-%d')
-
+        self.id = round(time.time() * 1000)
         self.name = name
         self.email = email
         self.phone = phone
