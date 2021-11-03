@@ -1,9 +1,11 @@
 from flask import Flask,render_template,url_for,request,redirect,jsonify
+from flask.ctx import AppContext
 from flask_sqlalchemy import SQLAlchemy
 import models
 import requests
 from flask_mail import Mail, Message
-import smtplib
+from apscheduler.schedulers.background import BackgroundScheduler
+import time
 
 app = Flask(__name__)
 
@@ -64,25 +66,26 @@ def test():
 #SMS sending route
 @app.route('/sendsms',methods=['POST','GET'])
 def sendSMS():
-    try:
-        print("Sending SMS")
-        url = "https://www.fast2sms.com/dev/bulkV2"
-        number = "7091788126"
-        message = "Happy Birthday"
-        querystring = {"authorization":"YyvBSlen5O2ALDk4IQUVzsXHCqMRK7i9aNJwp0x3ud1G6fjTbchiQXjoG2RWI8mTJKODE4cA7baFtx9M","message":message,"language":"english","route":"q","numbers":number}
+    with app.app_context():
+        try:
+            print("Sending SMS")
+            url = "https://www.fast2sms.com/dev/bulkV2"
+            number = "7091788126"
+            message = "Happy Birthday \n - Abhijeet Sinha"
+            querystring = {"authorization":"YyvBSlen5O2ALDk4IQUVzsXHCqMRK7i9aNJwp0x3ud1G6fjTbchiQXjoG2RWI8mTJKODE4cA7baFtx9M","message":message,"language":"english","route":"q","numbers":number}
 
-        headers = {
-            'cache-control': "no-cache"
-        }
+            headers = {
+                'cache-control': "no-cache"
+            }
 
-        resp = requests.request("GET", url, headers=headers, params=querystring)
+            resp = requests.request("GET", url, headers=headers, params=querystring)
 
-        print(resp.text)
+            print(resp.text)
 
-        return jsonify({"response":resp.text})
-    except Exception as e:
-        print(repr(e))
-        return jsonify({"response":"Something went wrong"})
+            return jsonify({"response":resp.text})
+        except Exception as e:
+            print(repr(e))
+            return jsonify({"response":"Something went wrong"})
 
 
 
@@ -90,20 +93,32 @@ def sendSMS():
 #Email sending route
 @app.route('/sendemail',methods=['POST','GET'])
 def sendEmail():
-    try:
-        print("Sending Email")    
-        msg = Message(
-                        'Hello testing mailer',
-                        sender ='birthdaywishingbot@gmail.com',
-                        recipients = ['abhijeetsinha1503@gmail.com']
-                    )
-        msg.body = 'Hello Flask message sent from Flask-Mail'
-        mail.send(msg)
-        
-        return jsonify({"response":"Mail sent"})
-    except Exception as e:
-        print(repr(e))
-        return jsonify({"response":"Something went wrong"})
+    with app.app_context():
+        try:
+            print("Sending Email")    
+            msg = Message(
+                            'Hello testing mailer',
+                            sender ='birthdaywishingbot@gmail.com',
+                            recipients = ['abhijeetsinha1503@gmail.com']
+                        )
+            msg.body = 'Final Testing mail'
+            mail.send(msg)
+            print("Email sent")
+            return jsonify({"response":"Mail sent"})
+        except Exception as e:
+                print(repr(e))
+                return jsonify({"response":"Something went wrong"})
+
+# # @app.before_first_request
+# def testScheduling():
+#     print("Hello from scheduler")
+#     print(time.time())
+#     time.sleep(100000)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    print("running")
+    scheduler = BackgroundScheduler()
+    job = scheduler.add_job( sendSMS, 'cron', day_of_week ='mon-sun', hour=18, minute=30,second=10)
+    scheduler.start()
+    app.run(use_reloader=False)
+    
