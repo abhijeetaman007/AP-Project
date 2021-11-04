@@ -1,5 +1,5 @@
 # AP-Project
-Birthday wishing app using python.
+Automated Birthday wishing app using python.
 
 ## Setting Up:
 1. Install `virtualenv`:
@@ -14,7 +14,7 @@ $ virtualenv env
 
 3. Then run the command:
 ```
-$ .\env\Scripts\activate
+$ source env/bin/activate
 ```
 
 4. Then install the dependencies:
@@ -31,5 +31,5 @@ This server will start on port 5000 by default. You can change this in `app.py` 
 
 ```python
 if __name__ == "__main__":
-    app.run(debug=True, port=<desired port>)
+    app.run(debug=False, port=<desired port>)
 ```

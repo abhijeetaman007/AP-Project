@@ -47,7 +47,8 @@ def test():
         userEmail = request.form['email']
         userDob = request.form['dob']
         userMessage = request.form['message']
-        
+        if(userMessage==""):
+            userMessage = "Happy birthday! I hope all your birthday wishes and dreams come true."
         format = '%Y-%m-%d'
         date = datetime.datetime.strptime(userDob,format)
         print("date : ",date)
@@ -73,7 +74,7 @@ def test():
 #Automated Bday wisher function
 @app.route('/sendbdaywish',methods=['GET'])
 def sendBdayWish():
-    
+
     # Fetch all users details
     users = models.User.query.all()
     print(users)
@@ -95,7 +96,7 @@ def sendSMS(user):
         try:
             print("Sending SMS")
             url = "https://www.fast2sms.com/dev/bulkV2"
-            number = user.Number
+            number = user.phone
             message = user.message+ "\n -"+user.name
             querystring = {"authorization":"YyvBSlen5O2ALDk4IQUVzsXHCqMRK7i9aNJwp0x3ud1G6fjTbchiQXjoG2RWI8mTJKODE4cA7baFtx9M","message":message,"language":"english","route":"q","numbers":number}
             headers = {
@@ -131,14 +132,17 @@ def sendEmail(user):
             return jsonify({"response":"Mail sent"})
         except Exception as e:
                 print(repr(e))
-                return jsonify({"response":"Something went wrong"})
+                return jsonify({"response":"Something went wrong"}) 
 
+
+def testing():
+    print("Testing")
 
 if __name__ == "__main__":
     print("running")
     scheduler = BackgroundScheduler()
-    job = scheduler.add_job( sendBdayWish, 'cron', day_of_week ='mon-sun', hour=23, minute=20,second=15)
+    job = scheduler.add_job( sendBdayWish, 'cron', day_of_week ='mon-sun', hour=17, minute=18,second=10)
     scheduler.start()
-    app.run(debug=True)
-    # app.run(use_reloader=False)
+    # app.run(debug=True)
+    app.run(use_reloader=False)
     
