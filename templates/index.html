@@ -1,44 +1,49 @@
 {% extends "base.html" %} {% block head%}
 <title>Birthday Wishing App</title>
 {% endblock%} {%block body%}
-<div class="form">
-    <h3>Enter User Details</h3>
-    <form action="/" method="POST" id="form1">
+<h1>Birthday Wishing App</h1>
+<form action="/" method="POST" id="form1">
+    <h2>Enter Details</h2>
+    <div class="form-field">
         <label for="Name">Name:</label>
-        <input type="text" id="name" name="name" /><br /><br />
-
+        <input type="text" id="name" name="name" />
+    </div>
+    <div class="form-field">
         <label for="phone">Phone number:</label>
         <input
             type="tel"
             id="phone"
             name="phone"
             placeholder="xxxxnnnnnn"
-            required
-        /><br /><br />
-
+            required/>
+    </div>
+    <div class="form-field">
         <label for="E-mail">E-mail:</label>
         <input
             type="email"
             id="email"
             name="email"
             placeholder="abcd@xyz.com"
-            required
-        /><br /><br />
-
+            required/>
+    </div>
+    <div class="form-field">
         <label for="dob">DOB:</label>
-        <input type="date" id="dob" name="dob" /><br /><br />
-
+        <input type="date" id="dob" name="dob" placeholder="01-01-2000" />
+    </div>
+    <div class="form-field">
         <label for="custom-message"> Custom Message </label>
         <input
             type="text"
             name="message"
             id="message"
-            maxlength="50"
-        /><br /><br />
+            placeholder="Happy birthday!"
+            maxlength="50"/>
+    </div>
+    <div class="form-button">
         <input class="button" type="submit" />
-    </form>
-</div>
-<div>
+    </div>
+</form>
+<div class="friend-list">
     <h3>Friend List</h3>
     <ul>
         {%for user in users %}

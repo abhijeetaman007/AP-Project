@@ -16,6 +16,9 @@ $ virtualenv env
 ```
 $ source env/bin/activate
 ```
+```
+$ source env\Scrpits\activate
+``
 
 4. Then install the dependencies:
 ```

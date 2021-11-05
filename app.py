@@ -97,7 +97,7 @@ def sendSMS(user):
             print("Sending SMS")
             url = "https://www.fast2sms.com/dev/bulkV2"
             number = user.phone
-            message = user.message+ "\n -"+user.name
+            message = user.message+ ","+user.name
             querystring = {"authorization":"YyvBSlen5O2ALDk4IQUVzsXHCqMRK7i9aNJwp0x3ud1G6fjTbchiQXjoG2RWI8mTJKODE4cA7baFtx9M","message":message,"language":"english","route":"q","numbers":number}
             headers = {
                 'cache-control': "no-cache"
@@ -126,7 +126,7 @@ def sendEmail(user):
                             sender ='birthdaywishingbot@gmail.com',
                             recipients = [user.email]
                         )
-            msg.body = user.message+"\n \n -"+user.name
+            msg.body = user.message+","+user.name
             mail.send(msg)
             print("Email sent")
             return jsonify({"response":"Mail sent"})
@@ -143,6 +143,6 @@ if __name__ == "__main__":
     scheduler = BackgroundScheduler()
     job = scheduler.add_job( sendBdayWish, 'cron', day_of_week ='mon-sun', hour=17, minute=18,second=10)
     scheduler.start()
-    # app.run(debug=True)
+    app.run(debug=True)
     app.run(use_reloader=False)
     
