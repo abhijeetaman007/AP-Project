@@ -14,7 +14,7 @@ body {
   color: #333333;
 }
 .box-form {
-  margin:2% auto;
+  margin:5% auto;
   width: 80%;
   background: #FFFFFF;
   border-radius: 10px;
@@ -41,7 +41,7 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   /* background-image: url(https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80); */
-  background-image: linear-gradient(135deg, #ffeab2 10%, #da880f 100%);
+  background-image: linear-gradient(135deg,  #f8a830 10%, #cc5f07 100%);
   overflow: hidden;
   text-align: center;
 }
@@ -67,7 +67,7 @@ body {
 }
 .box-form .left input {
   width: 100%;
-  padding: 1.5% 0%;
+  padding: 0% 0% ;
   margin-top: 25px;
   border: none;
   border-radius: 3px ;
@@ -96,8 +96,8 @@ body {
 button, .button {
   color: #fff;
   /* font-size: 16px; */
-  padding: 10px 25px;
-  border-radius: 50px;
+  padding: 5px 25px;
+  border-radius: 40px;
   display: inline-block;
   border: 0;
   outline: 0;
@@ -129,11 +129,10 @@ details summary::-webkit-details-marker {
 
 details summary {
   width: 100%;
-  padding: 0.5rem 0;
-  border-top: 1px solid black;
+  padding: 0;
+  border-top: 1px solid #753d09;
   position: relative;
   cursor: pointer;
-  font-size: 1.25rem;
   font-weight: 300;
   list-style: none;
 }
@@ -158,9 +157,9 @@ details summary {
   outline: 0;
 }
 details p {
-  font-size: 0.95rem;
+  font-size: 0.80rem;
   margin: 0 0 1rem;
-  padding-top: 1rem;
+  /* padding-top: 1rem; */
 }
 .right h1{
   font-size: 5.4vmax;
