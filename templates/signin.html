@@ -1,0 +1,29 @@
+{% extends "base.html" %} {% block head%}
+<title>Birthday Wishing App</title>
+<link rel="stylesheet" href="{{ url_for('static',filename='css/signstyles.css') }}" />
+{% endblock%} {%block body%}
+<div class="box-form">
+    <div class="left">
+        <div class="overlay">
+            <h1>Birthday Wisher</h1>
+            <p>Never forget your near ones birthday again!</p>
+            <span class="fa-brands fa-google" aria-hidden="true">
+                <a href="#"> Sign in with Google</a>
+            </span>
+        </div>
+    </div>
+
+    <div class="right">
+        <h5>Sign in</h5>
+        <p>Don't have an account yet?<a href="signup.html">Sign up</a></p>
+        <div class="inputs">
+            <input type="text" placeholder="Username">
+            <br>
+            <input type="password" placeholder="Password">
+        </div>
+        <br><br>
+        <br>
+        <button>Sign in</button>
+    </div>
+</div>
+{%endblock%}
