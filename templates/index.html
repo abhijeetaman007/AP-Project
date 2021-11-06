@@ -18,25 +18,30 @@
                     <br>
                     <input type="text" placeholder="Custom message" name="message">
                 </div>
-            <br>
+                <br>
             <input class="button" type="submit" value="Add">
             </form>
         </div>
     </div>
     <div class="right">
         <h1>Friend list</h1>
+        <div class="list">
         <br>
-        <ul>
             {%for user in users %}
             <details>
                 <summary>{{user.name}}</summary>
-                <p>{{user.email}} {{user.phone}} {{user.dob}}</p>
+                <p>{{user.email}} {{user.phone}} {{user.dob}}
+                    <div>
+                    <button type="submit" form="form1" value="delete">Delete</button>
+                    <button type="submit" form="form1" value="update">Update</button>
+                    </div>
+                </p>
             </details>
             {% endfor%}
-        </ul>
         <br>
-        <button type="submit" form="form1" value="delete">Delete</button>
-        <button type="submit" form="form1" value="update">Update</button>
+        </div>
+        
+    
     </div>
 </div>
 {%endblock%}
