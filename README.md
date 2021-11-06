@@ -19,7 +19,7 @@ $ source env/bin/activate
 In windows,
 ```
 $ source env\Scripts\activate
-``
+```
 
 4. Then install the dependencies:
 ```
