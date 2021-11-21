@@ -110,6 +110,11 @@ button, .button {
   display:inline-block;
   margin-right: 3px;
 }
+.opButton .logout{
+  position: absolute;
+  top: 0;
+  right: 0;
+  }
 
 details[open] summary ~ * {
   animation: open 0.3s ease-in-out;
