@@ -4,7 +4,6 @@
   font-size: 30px;
 }
 body {
-  /* background-image: linear-gradient(135deg, #FAB2FF 10%, #1904E5 100%); */
   background-image: url(https://previews.123rf.com/images/saenal78/saenal781503/saenal78150300020/37268712-hand-drawn-seamless-pattern-with-birthday-elements-vector-illustration.jpg);
   background-size: cover;
   background-repeat: no-repeat;
@@ -14,8 +13,10 @@ body {
 }
 .box-form {
   margin:auto;
-  width:69%;
-  background: #FFFFFF;
+  width:70%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: linear-gradient(135deg,  #f8a830 10%, #cc5f07 100%);
   border-radius: 10px;
   overflow: hidden;
   display: flex;
@@ -39,12 +40,11 @@ body {
   color: #FFFFFF;
   background-size: cover;
   background-repeat: no-repeat;
-  /* background-image: url(https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80); */
   background-image: linear-gradient(135deg,  #f8a830 10%, #cc5f07 100%);
   overflow: hidden;
   text-align: center;
 }
-.box-form .left .overlay {
+.box-form .left{
   padding: 2%;
   width: 100%;
   height: 100%;
@@ -59,7 +59,6 @@ body {
   font-weight: 500;
   padding: 5% 0%;
   margin: 40px 50px 20px;
-  white-space: nowrap;
 }
 .box-form .left .overlay p{
   font-size: 35px;
@@ -78,56 +77,4 @@ body {
   display: inline-block;
   box-shadow: 0px 4px 3px 0px rgb(160, 68, 6);
   background-image: linear-gradient(135deg, rgb(194, 90, 21) 10%, rgb(97, 42, 5) 100%)
-}
-.box-form .right {
-  color: #753d09;
-  padding: 0px 50px 40px;
-  overflow: hidden;
-  text-align: center;
-  background-color: rgba(255,252,246,255);
-}
-@media (max-width: 980px) {
-  .box-form .right {
-    width: 100%;
-  }
-}
-.box-form .right h5 {
-  font-size: 7vmax;
-  line-height: 0;
-}
-.box-form .right p {
-  font-size: 25px;
-  color: #B0B3B9;
-  white-space: nowrap;
-}
-.box-form .right p a{
-  font-size: 25px;
-}
-.box-form .right .inputs {
-  overflow: hidden;
-}
-.box-form .right input {
-  width: 100%;
-  padding: 0% 3% 0% 0%;
-  margin-top: 25px;
-  font-size: 30px;
-  border: none;
-  outline: none;
-  border-bottom: 2px solid #e6961f;
-  background-color: rgba(255,252,246,255);
-  color: #753d09;
-}
-input[data-type="password"]{
-	-webkit-text-security:circle;
-}
-.box-form .right button {
-  color: #fff;
-  padding: 5px 25px;
-  border-radius: 50px;
-  display: inline-block;
-  border: 0;
-  outline: 0;
-  cursor: pointer;
-  box-shadow: 0px 4px 3px 0px rgb(160, 68, 6);
-  background-image: linear-gradient(135deg, rgb(194, 90, 21) 10%, rgb(97, 42, 5) 100%);
 }
