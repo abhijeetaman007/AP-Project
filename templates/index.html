@@ -6,7 +6,7 @@
     <div class="left">
         <div class="overlay">
             <h1>Enter details:</h1>
-            <form action="/" method="POST" id="form1">
+            <form action="/app" method="POST" id="form1">
                 <div class="inputs">
                     <input type="text" placeholder="Name" name="name">
                     <br>
@@ -24,8 +24,8 @@
     </div>
     <div class="right">
         <div class="opButton">
-        <button type="submit" form="form1" value="import" class="import">Import from Google</button>
-        <button type="submit" form="form1" value="logout" class="logout">Logout</button>
+        <a href="http://127.0.0.1:5000/importcontacts">Import Google Contacts<a>
+        <a href="http://127.0.0.1:5000/logout">Logout<a>
         </div>
         <h1>Friend list</h1>
         <div class="list">
@@ -33,9 +33,9 @@
             {%for user in users %}
             <details>
                 <summary>{{user.name}}</summary>
-                <p>{{user.email}} {{user.phone}} {{user.dob}}<br>
-                    <button type="submit" form="form1" value="delete">Delete</button>
-                    <button type="submit" form="form1" value="update">Update</button>
+                <p>{{user.email}} {{user.phone}} {{user.dob}}
+                    <a href="http://127.0.0.1:5000/delete/{{user.email}}">Delete</a>
+                    <a href="http://127.0.0.1:5000/update/{{user.email}}">Update</a>
                 </p>
             </details>
             {% endfor%}

@@ -1,5 +1,6 @@
 from __future__ import print_function
 import os.path
+from typing_extensions import final
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -41,7 +42,7 @@ def get_credentials():
         Credentials, the obtained credential.
     """
     home_dir = os.path.expanduser('~')
-    credential_dir = os.path.join(home_dir, '.credentials1')
+    credential_dir = os.path.join(home_dir, '.credentials3')
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
     credential_path = os.path.join(credential_dir,
@@ -113,12 +114,18 @@ def importContacts():
 
     file = open('contacts.txt','w') 
 
+    finalpeople = []
+
     for person in connections:
         birthdays = person.get('birthdays', [])
         if birthdays:
         #     name = names[0].get('displayName')
-            file.write(str(person))
-            file.write('\n')
+            
+            # file.write(str(person))
+            # file.write('\n')
+            finalpeople.append(person)
             # print(name)
+    
+    return finalpeople
 # if __name__ == '__main__':
     # main()

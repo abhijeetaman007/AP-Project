@@ -9,6 +9,7 @@ class User(db.Model):
     dob = db.Column(db.Date)
     email = db.Column(db.String(255), unique=True)
     message = db.Column(db.String(1000),default="Happy birthday! I hope all your birthday wishes and dreams come true")
+    # userSignIn = db.Column(db.String(255), unique=True)
 
     def __init__(self, name, email,phone,dob,message="Happy Birthday!!! I hope all your birthday wishes and dreams come true"):
         self.id = round(time.time() * 1000)

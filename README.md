@@ -1,5 +1,5 @@
 # AP-Project
-Automated Birthday wishing app using python.
+Automated Birthday wishing app using python with features to schedule B'day wishes using SMS and Email service.Insert,update and delete custom message and schedule birthday wish with an option to get import from google contacts.      
 
 ## Setting Up:
 1. Install `virtualenv`:

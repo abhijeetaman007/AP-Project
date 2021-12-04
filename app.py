@@ -67,6 +67,9 @@ def login_is_required(function):
 def login():
     authorization_url, state = flow.authorization_url()
     session["state"] = state
+    print("Login")
+    print("state ",state)
+    print("Session",session)
     return redirect(authorization_url)  # Opening google login page
     #For Testing purpose only
     # session["google_id"] = "Test"
@@ -91,8 +94,16 @@ def callback():
         audience=GOOGLE_CLIENT_ID
     )
 
+    
+
     session["google_id"] = id_info.get("sub")
     session["name"] = id_info.get("name")
+    session["email"] = id_info.get("email")
+
+    print("Printing")
+    print(session["google_id"])
+    print(session["name"])
+    print(id_info)
     # return redirect("/protected_area")
     # return id_info
     return redirect("http://127.0.0.1:5000/app")
@@ -101,7 +112,9 @@ def callback():
 @app.route("/logout", endpoint='logout')
 def logout():
     session.clear()
-    return "logout"
+    #!! Redirect to home page
+    return redirect("http://127.0.0.1:5000/")
+    
 
 
 # @app.route("/protect")
@@ -127,9 +140,10 @@ def index():
 
 
 # Testing DB connection route
-@app.route('/app', endpoint='test', methods=['POST', 'GET'])
+@app.route('/app', endpoint='test', methods=['POST'])
 @login_is_required
 def test():
+    print("Session ",session)
     if request.method == 'POST':
         print(request.form)
         userName = request.form['name']
@@ -179,6 +193,30 @@ def sendBdayWish():
     return "success"
 
 
+#delete
+@app.route('/delete/<email>')
+def deleteUser(email):
+    # delete function
+    print("Search email ",email)
+    db.session.execute("DELETE from users where email=:param",{"param":email})
+    # print(user)
+    # db.session.delete(user)
+    db.session.commit()
+    return redirect("http://127.0.0.1:5000/app")
+
+
+#update
+@app.route('/update/<email>')
+def updateUser(email):
+    #Update
+    db.session.execute("DELETE from users where email=:param",{"param":email}) 
+    return "Update "+email
+
+#import
+@app.route('/import')
+def importUser():
+    return "Import User"
+
 # SMS sending route
 # @app.route('/sendsms',methods=['POST','GET'])
 def sendSMS(user):
@@ -227,13 +265,93 @@ def sendEmail(user):
 
 # Importing Contacts using google account
 @app.route('/importcontacts', endpoint='importContact', methods=['GET'])
-@login_is_required
+# @login_is_required
 def importContact():
     with app.app_context():
         try:
-            fetchContact.importContacts()
-            return redirect("http://127.0.0.1:5000/")
-            # return jsonify({"response":"Check Contacts File"})
+            persons = fetchContact.importContacts()
+            # return redirect("http://127.0.0.1:5000/")
+
+            # newUser = models.User(name=userName, email=userEmail,
+            #                   phone=userPhone, dob=date, message=userMessage)
+
+            # Adding people with email or phone or both to db
+            userMessage = "Happy birthday! I hope all your birthday wishes and dreams come true" 
+            for i in range(len(persons)):
+                print(i)
+                # userDOB=""
+                # userEmail=""
+                # userName=""
+                # userMobile=""
+                # Parsing Date
+                try:
+                    userDOB = "2000"+"-"+str(persons[i]["birthdays"][0]["date"]["month"]) +"-"+str(persons[i]["birthdays"][0]["date"]["day"]) 
+                    format = '%Y-%m-%d'
+                    dob = datetime.datetime.strptime(userDOB, format)
+                except Exception as e:
+                    print(e)
+                    print("index ",i," error in dob")
+                    continue
+
+                # Parsing Email
+                try:
+                    userEmail = persons[i]["emailAddresses"][0]["value"]
+                except:
+                    print("index ",i," error in dob")
+                    continue
+
+                #parsing Name
+                try:
+                    userName = persons[i]["names"][0]["displayName"]
+                except:
+                    print("index ",i," error in dob")
+                    continue
+
+                #parsing Mobile (an optional parameter)
+                try:
+                    userMobile = persons[i]["phoneNumbers"][0]["canonicalForm"][-10:-1]
+                except:
+                    print("index ",i," error in dob")
+                    userMobile = ""
+
+                newUser = models.User(name=userName, email=userEmail,phone=userMobile, dob=dob, message=userMessage)
+                print("new User : ", newUser)
+                try:
+                    print("We are here")
+                    users = db.session.execute("SELECT email FROM users where email=:param",{"param":userEmail})
+                    flag = 0
+                    for user in users:
+                         flag = 1
+                         break
+                    if flag == 0:
+                        db.session.add(newUser)  # Storing
+                        db.session.commit()
+                        print("User added to DB")
+                    # return render_template('thankyoupage.html', success=True)
+                except Exception as e:
+                    print(repr(e))
+                    continue
+
+
+            # l1 = []
+            # l1=persons[0]["birthdays"][0]
+            # persons[0]["birthdays"][0]["date"]["month"]  --- month                
+            # print(persons[0]["birthdays"][0]["date"]["month"])
+            # userDOB = "2000"+"-"+str(persons[0]["birthdays"][0]["date"]["month"]) +"-"+str(persons[0]["birthdays"][0]["date"]["day"]) 
+            # format = '%Y-%m-%d'
+            # date = datetime.datetime.strptime(userDOB, format)
+            # print("Formated Date",date)
+
+            # Mobile
+            # print(persons[2]["phoneNumbers"][0]["canonicalForm"][-10:-1])
+
+            # Email
+            # print(persons[5]["emailAddresses"][0]["value"])
+
+            # Name
+            # print(persons[2]["names"][0]["displayName"])
+
+            return jsonify({"response":persons})
         except Exception as e:
             print(repr(e))
             return jsonify({"response": "Something went wrong"})
