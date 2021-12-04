@@ -151,6 +151,7 @@ def test():
         userDob = request.form['dob']
         userMessage = request.form['message']
         userSignIn = session['email']
+        userSignInName = session['name'] 
 
         if(userMessage == ""):
             userMessage = "Happy birthday! I hope all your birthday wishes and dreams come true."
@@ -159,7 +160,7 @@ def test():
         print("date : ", date)
         print(userName, userPhone, userEmail, date, userMessage,userSignIn, sep=" ")
         newUser = models.User(name=userName, email=userEmail,
-                              phone=userPhone, dob=date, message=userMessage,userSignIn=userSignIn)
+                              phone=userPhone, dob=date, message=userMessage,userSignIn=userSignIn,userSignInName=userSignInName)
         print("new User : ", newUser)
         try:
             print(db)
@@ -178,7 +179,7 @@ def test():
 
 # Automated B'day Wisher function
 @app.route('/sendbdaywish', endpoint='sendBdayWish', methods=['GET'])
-@login_is_required
+# @login_is_required
 def sendBdayWish():
 
     # Fetch all users details
@@ -190,7 +191,7 @@ def sendBdayWish():
         if(datetime.date.today().day == user.dob.day and datetime.date.today().month == user.dob.month):
             print("here")
             sendEmail(user)
-            # sendSMS(user)
+            sendSMS(user)
     return "success"
 
 
@@ -226,7 +227,7 @@ def sendSMS(user):
             print("Sending SMS")
             url = "https://www.fast2sms.com/dev/bulkV2"
             number = user.phone
-            message = user.message + ","+user.name
+            message = user.message + "\n-"+user.userSignInName
             querystring = {"authorization": "YyvBSlen5O2ALDk4IQUVzsXHCqMRK7i9aNJwp0x3ud1G6fjTbchiQXjoG2RWI8mTJKODE4cA7baFtx9M",
                            "message": message, "language": "english", "route": "q", "numbers": number}
             headers = {
@@ -255,7 +256,7 @@ def sendEmail(user):
                 sender='birthdaywishingbot@gmail.com',
                 recipients=[user.email]
             )
-            msg.body = user.message+","+user.name
+            msg.body = user.message+"\n\n From "+user.userSignInName
             mail.send(msg)
             print("Email sent")
             return jsonify({"response": "Mail sent"})
@@ -315,7 +316,7 @@ def importContact():
                     print("index ",i," error in dob")
                     userMobile = ""
 
-                newUser = models.User(name=userName, email=userEmail,phone=userMobile, dob=dob, message=userMessage,userSignIn=session['email'])
+                newUser = models.User(name=userName, email=userEmail,phone=userMobile, dob=dob, message=userMessage,userSignIn=session['email'],userSignInName=session['name'])
                 print("new User : ", newUser)
                 try:
                     print("We are here")
@@ -366,7 +367,7 @@ if __name__ == "__main__":
     print("running")
     scheduler = BackgroundScheduler()
     job = scheduler.add_job(
-        sendBdayWish, 'cron', day_of_week='mon-sun', hour=17, minute=18, second=10)
+        sendBdayWish, 'cron', day_of_week='mon-sun', hour=21, minute=50, second=10)
     scheduler.start()
-    app.run(debug=True)
+    # app.run(debug=True)
     app.run(use_reloader=False)
