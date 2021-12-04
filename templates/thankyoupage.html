@@ -1,13 +1,16 @@
 {% extends "base.html" %} {% block head%}
-<title>Birthday Wishing App</title>
+<title>User addition</title>
+<link rel="stylesheet" href="{{ url_for('static',filename='css/thankyou.css') }}" />
 {% endblock%} {%block body%}
-<div>
-    {%if success == True%}
-    <h2>User detail added!</h2>
-    <a href="/app">Add more user</a>
-    {%endif%} {%if success == False%}
-    <h2>Something went wrong ;(</h2>
-    <a href="/app">Try Adding again.</a>
-    {%endif%}
+<div class="box-form">
+    <div class="overlay">
+        {%if success == True%}
+        <h2>User detail added!</h2>
+        <a href="/app">Add more user</a>
+        {%endif%} {%if success == False%}
+        <h2>Something went wrong :(</h2>
+        <a href="/app">Try Adding again.</a>
+        {%endif%}
+    </div>
 </div>
 {%endblock%}
