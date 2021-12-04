@@ -18,31 +18,27 @@
                     <br>
                     <input type="text" placeholder="Custom message" name="message">
                 </div>
-            <input class="button" type="submit" value="Add">
+                <input class="button" type="submit" value="Add">
             </form>
         </div>
     </div>
     <div class="right">
         <div class="opButton">
-        <a href="http://127.0.0.1:5000/importcontacts">Import Google Contacts<a>
-        <a href="http://127.0.0.1:5000/logout">Logout<a>
+            <a href="http://127.0.0.1:5000/importcontacts" class="import">Import Google Contacts</a>
+            <a href="http://127.0.0.1:5000/logout" class="logout">Logout</a>
         </div>
         <h1>Friend list</h1>
         <div class="list">
-        <br>
             {%for user in users %}
-            <details>
+            <details><br>
                 <summary>{{user.name}}</summary>
-                <p>{{user.email}} {{user.phone}} {{user.dob}}
-                    <a href="http://127.0.0.1:5000/delete/{{user.email}}">Delete</a>
-                    <a href="http://127.0.0.1:5000/update/{{user.email}}">Update</a>
+                <p>{{user.email}} {{user.phone}} {{user.dob}}<br>
+                    <div class="delete"><a href="http://127.0.0.1:5000/delete/{{user.email}}">Delete</a></div>
                 </p>
             </details>
             {% endfor%}
         <br>
         </div>
-        
-    
     </div>
 </div>
 {%endblock%}
