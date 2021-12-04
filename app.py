@@ -126,8 +126,6 @@ def logout():
 # Home Page
 @app.route('/', endpoint='home')
 def home():
-    # Fetch all users
-    # users = models.User.query.all()
     return render_template("signin.html")
 
 # Home page route
@@ -135,7 +133,8 @@ def home():
 @login_is_required
 def index():
     # Fetch all users
-    users = models.User.query.all()
+    # users = models.User.query.all()
+    users = db.session.execute("SELECT * FROM users where userSignIn=:param",{"param":session['email']})
     return render_template("index.html", users=users)
 
 
@@ -151,14 +150,16 @@ def test():
         userEmail = request.form['email']
         userDob = request.form['dob']
         userMessage = request.form['message']
+        userSignIn = session['email']
+
         if(userMessage == ""):
             userMessage = "Happy birthday! I hope all your birthday wishes and dreams come true."
         format = '%Y-%m-%d'
         date = datetime.datetime.strptime(userDob, format)
         print("date : ", date)
-        print(userName, userPhone, userEmail, date, userMessage, sep=" ")
+        print(userName, userPhone, userEmail, date, userMessage,userSignIn, sep=" ")
         newUser = models.User(name=userName, email=userEmail,
-                              phone=userPhone, dob=date, message=userMessage)
+                              phone=userPhone, dob=date, message=userMessage,userSignIn=userSignIn)
         print("new User : ", newUser)
         try:
             print(db)
@@ -265,12 +266,12 @@ def sendEmail(user):
 
 # Importing Contacts using google account
 @app.route('/importcontacts', endpoint='importContact', methods=['GET'])
-# @login_is_required
+@login_is_required
 def importContact():
     with app.app_context():
         try:
             persons = fetchContact.importContacts()
-            # return redirect("http://127.0.0.1:5000/")
+            
 
             # newUser = models.User(name=userName, email=userEmail,
             #                   phone=userPhone, dob=date, message=userMessage)
@@ -314,7 +315,7 @@ def importContact():
                     print("index ",i," error in dob")
                     userMobile = ""
 
-                newUser = models.User(name=userName, email=userEmail,phone=userMobile, dob=dob, message=userMessage)
+                newUser = models.User(name=userName, email=userEmail,phone=userMobile, dob=dob, message=userMessage,userSignIn=session['email'])
                 print("new User : ", newUser)
                 try:
                     print("We are here")
@@ -351,7 +352,8 @@ def importContact():
             # Name
             # print(persons[2]["names"][0]["displayName"])
 
-            return jsonify({"response":persons})
+            # return jsonify({"response":persons})
+            return redirect("http://127.0.0.1:5000/app")
         except Exception as e:
             print(repr(e))
             return jsonify({"response": "Something went wrong"})

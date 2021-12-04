@@ -42,7 +42,9 @@ def get_credentials():
         Credentials, the obtained credential.
     """
     home_dir = os.path.expanduser('~')
-    credential_dir = os.path.join(home_dir, '.credentials3')
+    # credential_dir = os.path.join(home_dir, '.credentials4')
+    credential_dir = os.path.join(os.getcwd(), 'credentials')
+    
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
     credential_path = os.path.join(credential_dir,

@@ -9,15 +9,16 @@ class User(db.Model):
     dob = db.Column(db.Date)
     email = db.Column(db.String(255), unique=True)
     message = db.Column(db.String(1000),default="Happy birthday! I hope all your birthday wishes and dreams come true")
-    # userSignIn = db.Column(db.String(255), unique=True)
+    userSignIn = db.Column(db.String(255))
 
-    def __init__(self, name, email,phone,dob,message="Happy Birthday!!! I hope all your birthday wishes and dreams come true"):
+    def __init__(self, name, email,phone,dob,userSignIn,message="Happy Birthday!!! I hope all your birthday wishes and dreams come true"):
         self.id = round(time.time() * 1000)
         self.name = name
         self.email = email
         self.phone = phone
         self.dob = dob
         self.message = message
+        self.userSignIn = userSignIn
 
     def __repr__(self):
         print(self.id)
@@ -26,5 +27,6 @@ class User(db.Model):
         print(self.phone)
         print(self.dob)
         print(self.message)
+        print(self.userSignIn)
         return '<User %r>' % self.name
 
