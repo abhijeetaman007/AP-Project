@@ -71,10 +71,6 @@ def login():
     print("state ",state)
     print("Session",session)
     return redirect(authorization_url)  # Opening google login page
-    #For Testing purpose only
-    # session["google_id"] = "Test"
-    # return redirect("/protect")
-
 
 @app.route("/callback", endpoint='callback')
 def callback():
@@ -100,28 +96,19 @@ def callback():
     session["name"] = id_info.get("name")
     session["email"] = id_info.get("email")
 
-    print("Printing")
+    print("Printing Session Info:")
     print(session["google_id"])
     print(session["name"])
     print(id_info)
-    # return redirect("/protected_area")
-    # return id_info
     return redirect("http://127.0.0.1:5000/app")
 
 
 @app.route("/logout", endpoint='logout')
 def logout():
     session.clear()
-    #!! Redirect to home page
+    # Redirect to home page
     return redirect("http://127.0.0.1:5000/")
     
-
-
-# @app.route("/protect")
-# # @login_is_required
-# def protected_area():
-#     return "protected_area"
-
 
 # Home Page
 @app.route('/', endpoint='home')
@@ -189,7 +176,7 @@ def sendBdayWish():
         print("Birthday ", user.dob)
         print("Today's Date", datetime.date.today())
         if(datetime.date.today().day == user.dob.day and datetime.date.today().month == user.dob.month):
-            print("here")
+            print("Sending to :" ,user.name)
             sendEmail(user)
             sendSMS(user)
     return "success"
@@ -201,18 +188,8 @@ def deleteUser(email):
     # delete function
     print("Search email ",email)
     db.session.execute("DELETE from users where email=:param",{"param":email})
-    # print(user)
-    # db.session.delete(user)
     db.session.commit()
     return redirect("http://127.0.0.1:5000/app")
-
-
-#update
-@app.route('/update/<email>')
-def updateUser(email):
-    #Update
-    db.session.execute("DELETE from users where email=:param",{"param":email}) 
-    return "Update "+email
 
 #import
 @app.route('/import')
@@ -268,23 +245,15 @@ def sendEmail(user):
 # Importing Contacts using google account
 @app.route('/importcontacts', endpoint='importContact', methods=['GET'])
 @login_is_required
-def importContact():
+def importContact():    
     with app.app_context():
         try:
             persons = fetchContact.importContacts()
-            
-
-            # newUser = models.User(name=userName, email=userEmail,
-            #                   phone=userPhone, dob=date, message=userMessage)
 
             # Adding people with email or phone or both to db
             userMessage = "Happy birthday! I hope all your birthday wishes and dreams come true" 
             for i in range(len(persons)):
                 print(i)
-                # userDOB=""
-                # userEmail=""
-                # userName=""
-                # userMobile=""
                 # Parsing Date
                 try:
                     userDOB = "2000"+"-"+str(persons[i]["birthdays"][0]["date"]["month"]) +"-"+str(persons[i]["birthdays"][0]["date"]["day"]) 
@@ -311,7 +280,8 @@ def importContact():
 
                 #parsing Mobile (an optional parameter)
                 try:
-                    userMobile = persons[i]["phoneNumbers"][0]["canonicalForm"][-10:-1]
+                    print(persons[i]["phoneNumbers"][0]["canonicalForm"][3:13])
+                    userMobile = persons[i]["phoneNumbers"][0]["canonicalForm"][3:13]
                 except:
                     print("index ",i," error in dob")
                     userMobile = ""
@@ -334,40 +304,17 @@ def importContact():
                     print(repr(e))
                     continue
 
-
-            # l1 = []
-            # l1=persons[0]["birthdays"][0]
-            # persons[0]["birthdays"][0]["date"]["month"]  --- month                
-            # print(persons[0]["birthdays"][0]["date"]["month"])
-            # userDOB = "2000"+"-"+str(persons[0]["birthdays"][0]["date"]["month"]) +"-"+str(persons[0]["birthdays"][0]["date"]["day"]) 
-            # format = '%Y-%m-%d'
-            # date = datetime.datetime.strptime(userDOB, format)
-            # print("Formated Date",date)
-
-            # Mobile
-            # print(persons[2]["phoneNumbers"][0]["canonicalForm"][-10:-1])
-
-            # Email
-            # print(persons[5]["emailAddresses"][0]["value"])
-
-            # Name
-            # print(persons[2]["names"][0]["displayName"])
-
-            # return jsonify({"response":persons})
             return redirect("http://127.0.0.1:5000/app")
         except Exception as e:
             print(repr(e))
             return jsonify({"response": "Something went wrong"})
 
 
-# def testing():
-    # print("Testing")
-
 if __name__ == "__main__":
     print("running")
     scheduler = BackgroundScheduler()
     job = scheduler.add_job(
-        sendBdayWish, 'cron', day_of_week='mon-sun', hour=21, minute=50, second=10)
+        sendBdayWish, 'cron', day_of_week='mon-sun', hour=19, minute=41, second=10)
     scheduler.start()
     # app.run(debug=True)
     app.run(use_reloader=False)
