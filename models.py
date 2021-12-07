@@ -7,7 +7,7 @@ class User(db.Model):
     name = db.Column(db.String(255))
     phone = db.Column(db.String(20))
     dob = db.Column(db.Date)
-    email = db.Column(db.String(255), unique=True)
+    email = db.Column(db.String(255))
     message = db.Column(db.String(1000),default="Happy birthday! I hope all your birthday wishes and dreams come true")
     userSignIn = db.Column(db.String(255))
     userSignInName = db.Column(db.String(255))

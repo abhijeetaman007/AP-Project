@@ -125,7 +125,7 @@ def index():
     return render_template("index.html", users=users)
 
 
-# Testing DB connection route
+# Form Submission
 @app.route('/app', endpoint='test', methods=['POST'])
 @login_is_required
 def test():
@@ -183,11 +183,11 @@ def sendBdayWish():
 
 
 #delete
-@app.route('/delete/<email>')
-def deleteUser(email):
+@app.route('/delete/<id>')
+def deleteUser(id):
     # delete function
-    print("Search email ",email)
-    db.session.execute("DELETE from users where email=:param",{"param":email})
+    print("User ID to be deleted ",id)
+    db.session.execute("DELETE from users where id=:param",{"param":id})
     db.session.commit()
     return redirect("http://127.0.0.1:5000/app")
 
@@ -314,7 +314,7 @@ if __name__ == "__main__":
     print("running")
     scheduler = BackgroundScheduler()
     job = scheduler.add_job(
-        sendBdayWish, 'cron', day_of_week='mon-sun', hour=19, minute=41, second=10)
+        sendBdayWish, 'cron', day_of_week='mon-sun', hour=10, minute=16, second=10)
     scheduler.start()
     # app.run(debug=True)
     app.run(use_reloader=False)
